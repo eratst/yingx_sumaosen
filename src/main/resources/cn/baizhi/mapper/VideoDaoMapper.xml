@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.baizhi.dao.VideoDao">
+
+    <!--手动映射-->
+    <resultMap id="All" type="cn.baizhi.entity.Video">
+        <!--主属性映射-->
+        <id column="id" property="id"></id>
+        <!--普通属性映射-->
+        <!--关系属性映射 单独的对象-->
+        <!--关系属性是集合-->
+        <result column="title" property="title"></result>
+        <result column="brief" property="brief"></result>
+        <result column="cover_path" property="coverPath"></result>
+        <result column="video_path" property="videoPath"></result>
+        <result column="create_date" property="createDate"></result>
+        <!--关系属性-->
+        <association property="category">
+            <id column="category_id" property="id"></id>
+            <result column="catename" property="catename"></result>
+        </association>
+        <association property="user">
+            <id column="uid" property="id"></id>
+            <result column="username" property="username"></result>
+        </association>
+    </resultMap>
+
+    <!--查所有视频-->
+    <select id="selectByPage" resultMap="All">
+        select video.id,title,video.brief,cover_path,video_path,create_date,
+               category_id,user_id,group_id,user.id uid,user.username,category.catename from
+        (select id,title,brief,cover_path,video_path,create_date,category_id,
+               user_id,group_id from yx_video limit #{start},#{end}) video
+        left join yx_category category on category.id = video.category_id
+        left join yx_user user on user.id = video.user_id
+    </select>
+
+    <!--查视频总数-->
+    <select id="selectVideoCount" resultType="integer">
+        select count(*) from yx_video
+    </select>
+
+    <!--添加视频-->
+    <insert id="save" parameterType="cn.baizhi.entity.Video">
+        insert into yx_video values(#{id},#{title},#{brief},#{coverPath},#{videoPath},#{createDate},#{category.id},#{user.id},#{groupId})
+    </insert>
+
+    <!--删除视频-->
+    <delete id="deleteById" parameterType="string">
+        delete from yx_video where id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.baizhi.dao.CategoryDao">
+
+    <!--selectByLevels-->
+    <select id="selectByLevels" parameterType="int" resultType="cn.baizhi.entity.Category">
+        select id,catename,levels,parentid from yx_category where levels=#{levels}
+    </select>
+
+    <!--selectByParendId-->
+    <select id="selectByParendId" parameterType="string" resultType="cn.baizhi.entity.Category">
+        select id,catename,levels,parentid from yx_category where parentid = #{id}
+    </select>
+
+    <!--savelevels-->
+    <insert id="save" parameterType="Category">
+        insert into yx_category values (#{id},#{catename},#{levels},#{parentid})
+    </insert>
+
+    <!--delectById-->
+    <delete id="delete" parameterType="string">
+        delete from yx_category where id = #{id}
+    </delete>
+</mapper>
